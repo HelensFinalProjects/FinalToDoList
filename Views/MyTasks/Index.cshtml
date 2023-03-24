@@ -1,0 +1,87 @@
+﻿@*@model IEnumerable<WebShop.Models.Product>*@
+@model FinalToDoList.ViewModels.FilterViewModel
+
+@addTagHelper *, FinalToDoList
+
+@{
+    ViewData["Title"] = "Задачі";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Задачі</h1>
+
+<p>
+    <a asp-action="Create">Додати нову задачу</a>
+</p>
+
+
+<div class="row" id="gallery">
+    <div class="col-md-12" style="padding: 0px 20px">
+        <div class="row">
+            <div class="col-md-3" style="padding:15px;border:1px solid silver;align-content:last baseline;background-color:aliceblue">
+                <h5 style="text-align:center">Фільтри вибірки</h5>
+                <hr />
+                <form method="get">
+                    <div class="form-group">
+                        <label class="control-label">Категорія:</label>
+                        <select name="cid" asp-items="Model.Categories" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Статус:</label>
+                        <select name="pid" asp-items="Model.Statuses" class="form-control"></select>
+                    </div>
+                    <p style="margin-top:30px; text-align:center">
+                        <input type="submit" value="Фільтр" class="btn btn-success" style="width: 120px" />
+                    </p>
+                </form>
+            </div>
+            @foreach (var item in Model.MyTasks)
+            {
+                <div class="accordion col-md-3" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                @item.Name
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                            <div class="accordion-body" style="background-color:lightblue" >
+                                <div class="col-md-12">
+                                    <div class="card" style="width: 100%; margin-bottom: 10px">
+                                        <img src="@item.FileName" class="card-img-top" alt="-" style="height: 178px" />
+                                        <div class="card-body" style="text-align:center">
+                                            <input type="hidden" class="productId" value="@item.Id" />
+                                            <h5 style="text-align:left" class="card-title">Назва: @item.Name</h5>
+                                            <h5 style="text-align:left">Статус: @item.Status.Name</h5>
+                                            <h5 style="text-align:left">Категорія: @item.Category.Name</h5>
+                                            <h5 style="text-align:left">Кінцева дата: </h5>
+                                            <h5 style="color:red">@item.DeadLine</h5>
+                                            @if (User.Identity.IsAuthenticated)
+                                            {
+                                                <button class="btn btn-success">
+                                                    <a asp-action="Details" asp-route-id="@item.Id" style="color:bisque">Переглянути</a>
+                                                </button>
+                                                <button class="btn btn-success" style="margin:10px">
+                                                    <a asp-action="Edit" asp-route-id="@item.Id" style="color:bisque">Редагувати</a>
+                                                </button>
+                                                <button class="btn btn-danger">
+                                                    <a asp-action="Delete" asp-route-id="@item.Id" style="color:bisque">Видалити</a>
+                                                </button>
+                                            }
+                                        </div>                                        
+                                    </div>                                   
+                                </div>
+                            </div>                            
+                        </div>                        
+                    </div>                   
+                </div>
+            }
+            
+        </div>
+        <p>
+            <page-link page-model="Model.PageViewModel" page-action="Index" class="pagination justify-content-center pagination-lg"></page-link>
+        </p>
+    </div>
+    
+</div>
+
